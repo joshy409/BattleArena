@@ -4,6 +4,8 @@
 #include <vector>
 #include <random>
 #include <memory>
+#include <fstream>
+#include "display.h"
 using namespace std;
 
 class Hero {
@@ -136,8 +138,8 @@ int main()
 		index2.push_back(i);
 	}
 
-	cout << "Welcom to Battle Arena!" << endl;
-	cout << endl;
+	startscreen();
+
 	display(team1, team2);
 	cout << endl;
 	cout << endl;
@@ -145,10 +147,7 @@ int main()
 	vector<Hero> team2copy = team2;
 	while (turn(1,index1,index2,team2, team1copy, team2copy) and turn(2, index2, index1, team1, team2copy, team1copy)) {
 		display(team1, team2);
-
 		cout << endl;
-		//system("CLS");
-		
 	}
 }
 
