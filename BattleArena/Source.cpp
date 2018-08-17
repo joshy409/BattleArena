@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <vector>
 #include <random>
+#include <memory>
 using namespace std;
 
 class Hero {
@@ -42,17 +43,35 @@ void play(vector<Hero>& team1, vector<Hero>& team2) {
 
 	std::random_device rd; // obtain a random number from hardware
 	std::mt19937 eng(rd()); // seed the generator
-	std::uniform_int_distribution<> distr(0, 4); // define the range
-	int target = distr(eng);
-	int player = distr(eng);
+	std::uniform_int_distribution<> hero(0, team2.size()-1); // define the range
+	std::uniform_int_distribution<> hero1(0, team1.size() - 1); // define the range
+	int target = hero(eng);
+	int player = hero1(eng);
 	std::uniform_int_distribution<> damage(team1[player].getMinDamage(), team1[player].getMaxDamage()); // define the range
 	int attack = damage(eng);
-	
-
 	team2[target].setHealth(attack);
-
+	if (team2[target].getHealth() <= 0) {
+		cout << team2[target].getName() << " is removed" << endl;
+		team2.erase(team2.begin()+target);
+		cout << endl;
+	}
 	cout << team1[player].getName() << " attacks " << team2[target].getName() << " with " << team1[player].getAbility() << " and inflicts " << attack << " damage" << endl;
-
+	
+	std::uniform_int_distribution<> hero3(0, team1.size()-1); // define the range
+	std::uniform_int_distribution<> hero4(0, team2.size() - 1); // define the range
+	target = hero3(eng);
+	player = hero4(eng);
+	std::uniform_int_distribution<> damage1(team2[player].getMinDamage(), team2[player].getMaxDamage()); // define the range
+	attack = damage1(eng);
+	team1[target].setHealth(attack);
+	cout << team2[player].getName() << " attacks " << team1[target].getName() << " with " << team2[player].getAbility() << " and inflicts " << attack << " damage" << endl;
+	cout << endl;
+	if (team1[target].getHealth() <= 0) {
+		cout << team1[target].getName() << " is removed" << endl;
+		cout << endl;
+		team1.erase(team1.begin() + target);
+	}
+	
 }
 
 
@@ -84,7 +103,17 @@ int main()
 	team2.push_back(hunter);
 	team2.push_back(druid);
 
-	for (int i = 0; i < 5; i++) {
+
+	for (int i = 0; i < 15; i++) {
 		play(team1, team2);
+
+		for (int i = 0; i < team1.size(); i++) {
+			cout << team1[i].getName() << " has " << team1[i].getHealth() << " hp" << endl;
+		}
+		for (int i = 0; i < team2.size(); i++) {
+			cout << team2[i].getName() << " has " << team2[i].getHealth() << " hp" << endl;
+		}
+		cout << endl;
 	}
+
 }
