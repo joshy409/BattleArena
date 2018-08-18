@@ -119,6 +119,28 @@ bool play(vector<int>& index1, vector<int>& index2, vector<Hero>& team1, vector<
 	return true;
 }
 
+int select(vector<Hero> team1) {
+	int selected;
+	while (true) {
+		cin >> selected;
+		if (cin.fail()) {
+			cout << "Wrong input! Please select again (1-5): ";
+			cin.clear();
+			cin >> selected;
+			continue;
+		}
+		else if (selected >= team1.size()) {
+			cout << "Wrong input! Please select again (1-5): ";
+			continue;
+		} else if (team1[selected].getHealth() == 0) {
+			cout << team1[selected].getName() << " is dead! Please select again (1-5): ";
+			continue;
+		} else {
+			return selected--;
+		}
+	}
+}
+
 //TODO add input error handling
 bool pvpplay(vector<int>& index1, vector<int>& index2, vector<Hero>& team1, vector<Hero>& team2) {
 
@@ -130,13 +152,10 @@ bool pvpplay(vector<int>& index1, vector<int>& index2, vector<Hero>& team1, vect
 	}
 
 	cout << "Select your character (1-5): ";
-	int player;
-	cin >> player;
-	player--;
+	int player = select(team1);
+
 	cout << "Select your target (1-5): ";
-	int target;
-	cin >> target;
-	target--;
+	int target = select(team2);
 	
 
 	std::random_device rd; // obtain a random number from hardware
@@ -170,7 +189,7 @@ int main()
 {
 	//Team 1
 	vector<Hero> team1;
-	Hero mage(15, "Mage", "Fireball", pair<int, int>(4, 6));
+	Hero mage(0, "Mage", "Fireball", pair<int, int>(4, 6));
 	Hero warrior(20, "Warrior", "Mortal Strike", pair<int, int>(3, 9));
 	Hero warlock(14, "Warlock", "Chaos Bolt", pair<int, int>(5, 5));
 	Hero monk(17, "Monk", "Blackout Kick", pair<int, int>(3, 7));
@@ -192,7 +211,7 @@ int main()
 	//Team 2
 	vector<Hero> team2;
 	Hero deathKnight(18, "DeathKnight", "Death Strike", pair<int, int>(4, 6));
-	Hero priest(15, "Priest", "Mind Blast", pair<int, int>(3, 4));
+	Hero priest(0, "Priest", "Mind Blast", pair<int, int>(3, 4));
 	Hero paladin(18, "Paladin", "Judgement", pair<int, int>(5, 7));
 	Hero hunter(14, "Hunter", "Aim Shot", pair<int, int>(3, 5));
 	Hero druid(19, "Druid", "Bite", pair<int, int>(4, 7));
