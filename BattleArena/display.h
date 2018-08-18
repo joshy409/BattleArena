@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void startscreen();
+void printscreen(string filename);
 void gotoXY(int x, int y, string text);
 void gotoXY(int x, int y);
 std::string getFileContents(std::ifstream& File);

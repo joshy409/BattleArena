@@ -7,10 +7,10 @@ COORD CursorPosition;
 
 // console width 80
 // console height 25
-void startscreen()
+void printscreen(string filename)
 {
 
-	std::ifstream Reader("StartScreen.txt");             //Open file
+	std::ifstream Reader(filename + ".txt");             //Open file
 	std::string Art = getFileContents(Reader);       //Get file
 	std::cout << Art << std::endl;               //Print it to the screen
 	Reader.close();                           //Close file
@@ -23,7 +23,7 @@ void startscreen()
 	len = Plane[0].length();
 
 	bool exit = true;
-	do {
+	while (exit) {
 		if (GetAsyncKeyState(VK_RETURN))
 		{
 			exit = false;
@@ -38,13 +38,14 @@ void startscreen()
 			holder = Plane[y][len];
 			for (x = len; x>0; x--)
 			{
+
 				Plane[y][x] = Plane[y][x - 1];
 			}
 			Plane[y][0] = holder;
 		}
 
 		Sleep(100);
-	} while (exit);
+	} 
 }
 
 std::string getFileContents(std::ifstream& File)
@@ -68,6 +69,9 @@ std::string getFileContents(std::ifstream& File)
 		return "ERROR File does not exist.";
 	}
 }
+
+
+
 
 void gotoXY(int x, int y, string text)
 {
