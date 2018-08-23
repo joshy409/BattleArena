@@ -1,6 +1,6 @@
 #include "display.h"
-#undef max
-using namespace std;
+//#undef max
+
 
 /*void display(vector<Hero> team1, vector<Hero> team2) {
 	cout << endl;
@@ -27,12 +27,9 @@ using namespace std;
 	cout << endl;
 }*/
 
-void display(vector<Hero> team1, vector<Hero> team2) {
-	textbox(team1);
-}
 
 //TODO AI mode
-bool play(vector<int>& index1, vector<int>& index2, vector<Hero>& team1, vector<Hero>& team2) {
+/*bool play(vector<int>& index1, vector<int>& index2, vector<Hero>& team1, vector<Hero>& team2) {
 
 	if (team1[0].getTeamNumber() == "1") {
 		display(team1, team2);
@@ -71,7 +68,7 @@ bool play(vector<int>& index1, vector<int>& index2, vector<Hero>& team1, vector<
 	}
 
 	return true;
-}
+}*/
 
 /*int select(vector<Hero> team1) {
 	int selected;
@@ -99,32 +96,7 @@ bool play(vector<int>& index1, vector<int>& index2, vector<Hero>& team1, vector<
 }
 */
 
-int select(vector<Hero> team1) {
-	int len = 58;
-	int x = x + len / 2 + 2;
-	int y = 19;
-
-	while (true) {
-		if (y < 19 or y > team1.size() - 1 + y) {
-			y = 19;
-		}
-		gotoXY(x, y, ">");
-		if (GetAsyncKeyState(VK_DOWN))
-		{
-			y--;
-		}
-		else if (GetAsyncKeyState(VK_UP)) {
-			y++;
-		}
-		if (GetAsyncKeyState(VK_RETURN)) {
-			break;
-		}
-		Sleep(100);
-	}
-	return 0;
-}
-
-bool pvpplay(vector<int>& index1, vector<int>& index2, vector<Hero>& team1, vector<Hero>& team2) {
+/*bool pvpplay(vector<int>& index1, vector<int>& index2, vector<Hero>& team1, vector<Hero>& team2) {
 
 	if (team1[0].getTeamNumber() == "1") {
 		display(team1, team2);
@@ -165,58 +137,132 @@ bool pvpplay(vector<int>& index1, vector<int>& index2, vector<Hero>& team1, vect
 	}
 
 	return true;
+}*/
+
+//TODO ASCII ART gameplay screen
+
+//Game logic. return false if a team wins
+bool aiplay(shared_ptr<vector<int>>& index1, shared_ptr<vector<int>>& index2, vector<shared_ptr<Hero>>& team1, vector<shared_ptr<Hero>>& team2) {
+
+	int x = 11;
+	int y = 20;
+	int len = 58;
+
+	showStat(team1, false);
+
+	//player selection error handling
+	int player;
+	while (true) {
+		player = select(team1.size());
+		if (team1[player]->getHealth() == 0) {
+			showStat(team1, false);
+			clearBox(true, false);
+			gotoXY(x + 2, y);
+			cout << team1[player]->getName() << " is dead!";
+			gotoXY(x + 2, y+1);
+			cout << "Please select again";
+			continue;
+		}
+		break;
+	}
+
+	showAbility(team1[player]);
+	int ablility = select(index1->size());
+
+	//player selection error handling
+	showStat(team2, true);
+	int target;
+	while (true) {
+		target = select(team2.size());
+		if (team2[target]->getHealth() == 0) {
+			showStat(team2, true);
+			clearBox(true, false);
+			gotoXY(x + 2, y);
+			cout << team2[target]->getName() << " is dead!";
+			gotoXY(x + 2, y+1);
+			cout << "Please select again";
+			continue;
+		}
+		break;
+	}
+
+	showAttack(team1[player],team2[target]);
+
+	//infinite loop until Enter key is pressed to give user time to read the text
+	while (true) {
+		if (GetAsyncKeyState(VK_RETURN)) {
+			break;
+		}
+	}
+	Sleep(200);
+	
+	//when a hero dies check if it was the last hero on the team
+	if (team2[target]->getHealth() <= 0 and index2->size() == 1) { //when it was the last hero
+		
+		gotoXY(x + len / 2 + 4, y);
+		cout << team2[target]->getName() << " died" << endl;
+		team2[target]->setHealth(team2[target]->getHealth());
+		cout << endl;
+
+		cout << "\t\t" << "Team " << team1[0]->getTeamNumber() << " wins" << endl;
+		return false;
+
+	} else if (team2[target]->getHealth() <= 0) {
+
+		gotoXY(x + len / 2 + 4, y);
+		cout << team2[target]->getName() << " died" << endl;
+		team2[target]->setHealth(team2[target]->getHealth());
+		index2->pop_back();
+		cout << endl;
+	}
+	while (true) {
+		if (GetAsyncKeyState(VK_RETURN)) {
+			break;
+		}
+	}
+	Sleep(200);
+	return true;
 }
 
 int main()
 {
+	//Using smart pointers for memory management
 	//Team 1
-	vector<Hero> team1;
-	Hero mage(1, "Mage", "Fireball", pair<int, int>(4, 6));
-	Hero warrior(2, "Warrior", "Mortal Strike", pair<int, int>(3, 9));
-	Hero warlock(4, "Warlock", "Chaos Bolt", pair<int, int>(5, 5));
-	Hero monk(17, "Monk", "Blackout Kick", pair<int, int>(3, 7));
-	Hero rogue(16, "Rogue", "Roll the Dice", pair<int, int>(1, 10));
-	team1.push_back(mage);
-	team1.push_back(warrior);
-	team1.push_back(warlock);
-	//team1.push_back(monk);
-	//team1.push_back(rogue);
+	vector<shared_ptr<Hero>> team1;
+	team1.push_back(make_shared<Hero>(1, "Mage", "Fireball", pair<int, int>(4, 6)));
+	team1.push_back(make_shared<Hero>(2, "Warrior", "Mortal Strike", pair<int, int>(3, 9)));
+	team1.push_back(make_shared<Hero>(4, "Warlock", "Chaos Bolt", pair<int, int>(5, 5)));
+	team1.push_back(make_shared<Hero>(17, "Monk", "Blackout Kick", pair<int, int>(3, 7)));
+	team1.push_back(make_shared<Hero>(16, "Rogue", "Roll the Dice", pair<int, int>(1, 10)));
 
-	vector<int> index1;
+	//index vector is used to check how many hero's are alive, used for win condition check
+	auto index1 = make_shared<vector<int>>();
 	for (int i = 0; i < team1.size(); i++) {
-		index1.push_back(i);
-		team1[i].setTeamNumber("1");
+		index1->push_back(i);
+		team1[i]->setTeamNumber("1");
 	}
-
-
 
 	//Team 2
-	vector<Hero> team2;
-	Hero deathKnight(18, "DeathKnight", "Death Strike", pair<int, int>(4, 6));
-	Hero priest(1, "Priest", "Mind Blast", pair<int, int>(3, 4));
-	Hero paladin(18, "Paladin", "Judgement", pair<int, int>(5, 7));
-	Hero hunter(14, "Hunter", "Aim Shot", pair<int, int>(3, 5));
-	Hero druid(19, "Druid", "Bite", pair<int, int>(4, 7));
-	team2.push_back(deathKnight);
-	team2.push_back(priest);
-	team2.push_back(paladin);
-	//team2.push_back(hunter);
-	//team2.push_back(druid);
+	vector<shared_ptr<Hero>> team2;
+	team2.push_back(make_shared<Hero>(18, "DeathKnight", "Death Strike", pair<int, int>(4, 6)));
+	team2.push_back(make_shared<Hero>(1, "Priest", "Mind Blast", pair<int, int>(3, 4)));
+	team2.push_back(make_shared<Hero>(18, "Paladin", "Judgement", pair<int, int>(5, 7)));
+	team2.push_back(make_shared<Hero>(14, "Hunter", "Aim Shot", pair<int, int>(3, 5)));
+	team2.push_back(make_shared<Hero>(19, "Druid", "Bite", pair<int, int>(4, 7)));
 
-	vector<int> index2;
+	auto index2 = make_shared<vector<int>>();
 	for (int i = 0; i < team2.size(); i++) {
-		index2.push_back(i);
-		team2[i].setTeamNumber("2");
+		index2->push_back(i);
+		team2[i]->setTeamNumber("2");
 	}
 
-
 	//TODO gameover screen and win screen
-	startscreen();
+	startScreen();
 	system("CLS");
 	cout << endl;
 	cout << endl;
 
-	while(pvpplay(index1,index2,team1,team2) and pvpplay(index2, index1, team2, team1)) {
+	while(aiplay(index1,index2,team1,team2) and aiplay(index2, index1, team2, team1)) {
 		
 		cout << endl;
 		//cin.ignore();
@@ -224,7 +270,7 @@ int main()
 	
 	}
 
-	endscreen();
+	endScreen();
 
 }
 

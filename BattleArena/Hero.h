@@ -4,7 +4,7 @@ using namespace std;
 class Hero {
 public:
 	Hero(int health, string name, string ability, pair<int, int> damage) :
-		_health(health), _name(name), _ability(ability), _damage(damage), _maxhealth(health)
+		_health(health), _name(name), _ability(ability), _damage(damage), _maxHealth(health)
 	{}
 
 	int getHealth() {
@@ -28,21 +28,21 @@ public:
 	}
 
 	int getMaxHealth() {
-		return _maxhealth;
+		return _maxHealth;
 	}
 	string getTeamNumber() {
-		return _teamnumber;
+		return _teamNumber;
 	}
 
 	void setTeamNumber(string teamnumber) {
-		_teamnumber = teamnumber;
+		_teamNumber = teamnumber;
 	}
 
 private:
 	int _health;
-	int _maxhealth;
+	int _maxHealth;
 	string _name;
 	string _ability;
 	pair<int, int> _damage;
-	string _teamnumber = "";
+	string _teamNumber = "";
 };

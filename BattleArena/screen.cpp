@@ -1,13 +1,36 @@
 #include "display.h"
+// console width 80
+// console height 25
 
 std::string getFileContents(std::ifstream&);            //Gets file contents
 HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 COORD CursorPosition;
 
+//read the file and print line by line
+std::string getFileContents(std::ifstream& File)
+{
+	std::string Lines = "";        //All lines
+	if (File)                      //Check if everything is good
+	{
+		int x = 20;
+		int y = 5;
+		while (File.good())
+		{
+			std::string TempLine;                  //Temp line
+			std::getline(File, TempLine);        //Get temp line
+			gotoXY(x, y, TempLine);
+			cout << endl;
+			y++;
+		}
+		return Lines;
+	}
+	else                           //Return error
+	{
+		return "ERROR File does not exist.";
+	}
+}
 
-// console width 80
-// console height 25
-void startscreen()
+void startScreen()
 {
 
 	std::ifstream Reader("startscreen.txt");             //Open file
@@ -21,6 +44,7 @@ void startscreen()
 	int len, x;
 	len = startprompt.length();
 
+	// string startprompt rotates until Enter key is pressed
 	bool exit = true;
 	while (exit) {
 		if (GetAsyncKeyState(VK_RETURN))
@@ -37,35 +61,129 @@ void startscreen()
 		Sleep(100);
 	} 
 }
-int select(vector<Hero> team1) {
-	int len = 58;
-	int x = x + len / 2 + 2;
-	int y = 19;
 
+void endScreen()
+{
+}
+
+//returns index of the hero user selected
+int select(int size) {
+	int len = 58;
+	int x = 11 + len / 2 + 2;
+	int y = 20;
+
+	//keeps track of cursor's y position when UP or DOWN arrow key is pressed
+	//infinite loop until Enter key is pressed
 	while (true) {
-		if (y < 19 or y > team1.size() - 1 + y) {
-			y = 19;
+		if (y < 20) {
+			y = 20 + size - 1;
+		}
+		else if (y > 20 + size - 1) {
+			y = 20;
 		}
 		gotoXY(x, y, ">");
 		if (GetAsyncKeyState(VK_DOWN))
 		{
-			y--;
-		}
-		else if (GetAsyncKeyState(VK_UP)) {
+			gotoXY(x, y, " ");
 			y++;
 		}
+		else if (GetAsyncKeyState(VK_UP)) {
+			gotoXY(x, y, " ");
+			y--;
+		}
+		Sleep(100);
 		if (GetAsyncKeyState(VK_RETURN)) {
 			break;
 		}
-		Sleep(100);
+		Sleep(200);
 	}
-	return 0;
-}
-void endscreen()
-{
+	return y % 20;
 }
 
-void textbox(vector<Hero> team)
+//displays team number, member of the team and their current and max health
+void showStat(vector<shared_ptr<Hero>>& team, bool target)
+{
+	//clears textbox
+	border();
+
+	int x = 11;
+	int y = 19;
+	int len = 58;
+	gotoXY(x + len / 2 + 4, y);
+	cout << "Team " << team[0]->getTeamNumber() << string(9, ' ') << "HP";
+	y++;
+	gotoXY(x + len / 2 + 4, y);
+	for (auto i : team) {
+		cout << i->getName() << string(11 - i->getName().size(), ' ') << "    " << i->getHealth() << "/" << i->getMaxHealth();
+		y++;
+		gotoXY(x + len / 2 + 4, y);
+	}
+
+	x = 11;
+	y = 20;
+
+	//shows different prompt if the function was called for defending team
+	if (!target) {
+		gotoXY(x + 3, y);
+		cout << "Select Character";
+	}
+	else {
+		gotoXY(x + 3, y);
+		cout << "Select Target";
+	}
+}
+
+//randomly select damage from min/max value and displays results
+void showAttack(shared_ptr<Hero>& hero, shared_ptr<Hero>& target)
+{
+	std::random_device rd; // obtain a random number from hardware
+	std::mt19937 eng(rd()); // seed the generator
+	std::uniform_int_distribution<> damage(hero->getMinDamage(), hero->getMaxDamage()); // define the range
+	int attack = damage(eng);
+
+	border();
+	int x = 11;
+	int y = 20;
+
+	gotoXY(x + 2, y);
+	cout << hero->getName() << " attacks " << target->getName(); 
+	gotoXY(x + 2, y+1);
+	cout << "with " << hero->getAbility(); 
+	gotoXY(x + 2, y+2);
+	cout << "and inflicts " << attack << " damage" << endl;
+	
+	//subtract damage from HP
+	target->setHealth(attack);
+}
+
+//TODO implement multiple ablility hero/choice
+//displays abilitis of the chosen hero
+void showAbility(shared_ptr<Hero>& hero)
+{
+	border();
+	int x = 11;
+	int y = 19;
+	int len = 58;
+	gotoXY(x + len / 2 + 4, y);
+	cout << hero->getName() << "'s Abilities";
+	y++;
+	gotoXY(x + len / 2 + 4, y);
+	
+	cout << hero->getAbility();
+	y++;
+	gotoXY(x + len / 2 + 4, y);
+
+
+	x = 11;
+	y = 20;
+	gotoXY(x + 3, y);
+	cout << "What will " << hero->getName() << " do?";
+	
+}
+
+//creates a textbox to show text displays
+//entirely clears the contents of the textbox
+void border()
 {
 	int len, x, y;
 	x = 10;
@@ -77,50 +195,41 @@ void textbox(vector<Hero> team)
 	y++;
 	gotoXY(x, y);
 	y++;
-	for (int i = 0; i < team.size() + 1; i++) {
+	for (int i = 0; i < 6; i++) {
 		cout << "\xBA" << string(len / 2, ' ') << "|" << string(len / 2, ' ') << "\b\xBA" << endl;
 		gotoXY(x, y);
 		y++;
 	}
 	cout << "\xC8" << border << "\xBC" << endl;
+}
 
+//clears contents only if the left or the right or both
+void clearBox(bool left, bool right) {
+	int len, x, y;
 	x = 11;
 	y = 19;
-	gotoXY(x + len / 2 + 4, y);
-	cout << "Team " << team[0].getTeamNumber() << string(9, ' ') << "HP";
-	y++;
-	gotoXY(x + len / 2 + 4, y);
-	for (auto i : team) {
-		cout << i.getName() << string(11 - i.getName().size(), ' ') << "    " << i.getHealth() << "/" << i.getMaxHealth();
-		y++;
-		gotoXY(x + len / 2 + 4, y);
-	}
-}
-
-std::string getFileContents(std::ifstream& File)
-{
-	std::string Lines = "";        //All lines
-	if (File)                      //Check if everything is good
-	{
-		int x = 20;
-		int y = 5;
-		while (File.good())
-		{
-			std::string TempLine;                  //Temp line
-			std::getline(File, TempLine);        //Get temp line
-			gotoXY(x, y, TempLine);
-			cout<< endl;
+	len = 58;
+	
+	if (left) {
+		for (int i = 0; i < 6; i++) {
+			gotoXY(x, y);
+			cout << string(len / 2, ' ');
 			y++;
 		}
-		return Lines;
 	}
-	else                           //Return error
-	{
-		return "ERROR File does not exist.";
+
+	if (right) {
+		x = x + len / 2 + 3;
+		for (int i = 0; i < 6; i++) {
+			gotoXY(x, y);
+			cout << string(len / 2, ' ');
+			y++;
+		}
 	}
+
 }
 
-
+//cursor changer
 void gotoXY(int x, int y, string text)
 {
 	CursorPosition.X = x;
@@ -129,6 +238,7 @@ void gotoXY(int x, int y, string text)
 	cout << text;
 }
 
+//cursor changer
 void gotoXY(int x, int y)
 {
 	CursorPosition.X = x;

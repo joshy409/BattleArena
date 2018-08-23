@@ -9,10 +9,15 @@
 #include <windows.h>
 #include "Hero.h"
 
-using namespace std;
-void startscreen();
-void endscreen();
-void textbox(vector<Hero> team);
+
+void startScreen();
+void endScreen();
+int select(int size);
+void showStat(vector<shared_ptr<Hero>>& team, bool target);
+void showAttack(shared_ptr<Hero>& hero, shared_ptr<Hero>& target);
+void showAbility(shared_ptr<Hero>& hero);
+void border();
+void clearBox(bool left, bool right);
 void gotoXY(int x, int y, string text);
 void gotoXY(int x, int y);
 std::string getFileContents(std::ifstream& File);
