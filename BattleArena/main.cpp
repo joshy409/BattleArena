@@ -1,58 +1,8 @@
-#include <iostream>
-#include <string>
-#include <algorithm>
-#include <vector>
-#include <random>
-#include <memory>
-#include <fstream>
 #include "display.h"
 #undef max
-
 using namespace std;
 
-class Hero {
-public:
-	Hero(int health, string name, string ability, pair<int,int> damage) :
-		_health(health), _name(name), _ability(ability), _damage(damage)
-	{}
-
-	int getHealth() {
-		return _health;
-	}
-	string getName() {
-		return _name;
-	}
-	string getAbility() {
-		return _ability;
-	}
-	int getMinDamage() {
-		return _damage.first;
-	}
-	int getMaxDamage() {
-		return _damage.second;
-	}
-
-	void setHealth(int attack) {
-		_health -= attack;
-	}
-
-	string getTeamNumber() {
-		return _teamnumber;
-	}
-
-	void setTeamNumber(string teamnumber) {
-		_teamnumber = teamnumber;
-	}
-
-private:
-	int _health;
-	string _name;
-	string _ability;
-	pair<int, int> _damage;
-	string _teamnumber = "";
-};
-
-void display(vector<Hero> team1, vector<Hero> team2) {
+/*void display(vector<Hero> team1, vector<Hero> team2) {
 	cout << endl;
 	cout << "\t\tTeam " << team1[0].getTeamNumber() << " :  ";
 	for (auto i : team1) {
@@ -75,6 +25,10 @@ void display(vector<Hero> team1, vector<Hero> team2) {
 		cout  << i.getHealth() << string(11 - to_string(i.getHealth()).size(), ' ') <<"    ";
 	}
 	cout << endl;
+}*/
+
+void display(vector<Hero> team1, vector<Hero> team2) {
+	textbox(team1);
 }
 
 //TODO AI mode
@@ -119,7 +73,7 @@ bool play(vector<int>& index1, vector<int>& index2, vector<Hero>& team1, vector<
 	return true;
 }
 
-int select(vector<Hero> team1) {
+/*int select(vector<Hero> team1) {
 	int selected;
 	while (true) {
 		cin >> selected;
@@ -142,6 +96,32 @@ int select(vector<Hero> team1) {
 			return selected;
 		}
 	}
+}
+*/
+
+int select(vector<Hero> team1) {
+	int len = 58;
+	int x = x + len / 2 + 2;
+	int y = 19;
+
+	while (true) {
+		if (y < 19 or y > team1.size() - 1 + y) {
+			y = 19;
+		}
+		gotoXY(x, y, ">");
+		if (GetAsyncKeyState(VK_DOWN))
+		{
+			y--;
+		}
+		else if (GetAsyncKeyState(VK_UP)) {
+			y++;
+		}
+		if (GetAsyncKeyState(VK_RETURN)) {
+			break;
+		}
+		Sleep(100);
+	}
+	return 0;
 }
 
 bool pvpplay(vector<int>& index1, vector<int>& index2, vector<Hero>& team1, vector<Hero>& team2) {
@@ -231,10 +211,10 @@ int main()
 
 
 	//TODO gameover screen and win screen
-	//printscreen("startscreen");
-	//system("CLS");
-	//cout << endl;
-	//cout << endl;
+	startscreen();
+	system("CLS");
+	cout << endl;
+	cout << endl;
 
 	while(pvpplay(index1,index2,team1,team2) and pvpplay(index2, index1, team2, team1)) {
 		
@@ -244,7 +224,7 @@ int main()
 	
 	}
 
-	printscreen("endscreen");
+	endscreen();
 
 }
 
