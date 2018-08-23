@@ -12,12 +12,37 @@ std::string getFileContents(std::ifstream& File)
 	std::string Lines = "";        //All lines
 	if (File)                      //Check if everything is good
 	{
-		int x = 20;
+		int x = 18;
+		int y = 10;
+		while (File.good())
+		{
+			std::string TempLine;                  //Temp line
+			std::getline(File, TempLine);        //Get temp line
+			gotoXY(x, y, TempLine);
+			cout << endl;
+			y++;
+		}
+		return Lines;
+
+	}
+	else                           //Return error
+	{
+		return "ERROR File does not exist.";
+	}
+}
+
+std::string getFileContentsReverse(std::ifstream& File)
+{
+	std::string Lines = "";        //All lines
+	if (File)                      //Check if everything is good
+	{
+		int x = 10;
 		int y = 5;
 		while (File.good())
 		{
 			std::string TempLine;                  //Temp line
 			std::getline(File, TempLine);        //Get temp line
+			reverse(TempLine.begin(),TempLine.end());
 			gotoXY(x, y, TempLine);
 			cout << endl;
 			y++;
@@ -51,7 +76,7 @@ void startScreen()
 		{
 			exit = false;
 		}
-		gotoXY(20, 18, startprompt);
+		gotoXY(20, 22, startprompt);
 		holder = startprompt[len];
 		for (x = len; x>0; x--)
 		{
@@ -62,6 +87,12 @@ void startScreen()
 	} 
 }
 
+void printHero() {
+	std::ifstream Reader("mage.txt");             //Open file
+	getFileContentsReverse(Reader);       //Get file
+	Reader.close();                           //Close file
+}
+
 void endScreen()
 {
 }
@@ -70,16 +101,16 @@ void endScreen()
 int select(int size) {
 	int len = 58;
 	int x = 11 + len / 2 + 2;
-	int y = 20;
+	int y = 35;
 
 	//keeps track of cursor's y position when UP or DOWN arrow key is pressed
 	//infinite loop until Enter key is pressed
 	while (true) {
-		if (y < 20) {
-			y = 20 + size - 1;
+		if (y < 35) {
+			y = 35 + size - 1;
 		}
-		else if (y > 20 + size - 1) {
-			y = 20;
+		else if (y > 35 + size - 1) {
+			y = 35;
 		}
 		gotoXY(x, y, ">");
 		if (GetAsyncKeyState(VK_DOWN))
@@ -97,7 +128,7 @@ int select(int size) {
 		}
 		Sleep(200);
 	}
-	return y % 20;
+	return y % 35;
 }
 
 //displays team number, member of the team and their current and max health
@@ -107,7 +138,7 @@ void showStat(vector<shared_ptr<Hero>>& team, bool target)
 	border();
 
 	int x = 11;
-	int y = 19;
+	int y = 34;
 	int len = 58;
 	gotoXY(x + len / 2 + 4, y);
 	cout << "Team " << team[0]->getTeamNumber() << string(9, ' ') << "HP";
@@ -120,7 +151,7 @@ void showStat(vector<shared_ptr<Hero>>& team, bool target)
 	}
 
 	x = 11;
-	y = 20;
+	y = 35;
 
 	//shows different prompt if the function was called for defending team
 	if (!target) {
@@ -143,7 +174,7 @@ void showAttack(shared_ptr<Hero>& hero, shared_ptr<Hero>& target)
 
 	border();
 	int x = 11;
-	int y = 20;
+	int y = 35;
 
 	gotoXY(x + 2, y);
 	cout << hero->getName() << " attacks " << target->getName(); 
@@ -152,6 +183,8 @@ void showAttack(shared_ptr<Hero>& hero, shared_ptr<Hero>& target)
 	gotoXY(x + 2, y+2);
 	cout << "and inflicts " << attack << " damage" << endl;
 	
+	animation(hero->getAbility());
+
 	//subtract damage from HP
 	target->setHealth(attack);
 }
@@ -162,7 +195,7 @@ void showAbility(shared_ptr<Hero>& hero)
 {
 	border();
 	int x = 11;
-	int y = 19;
+	int y = 34;
 	int len = 58;
 	gotoXY(x + len / 2 + 4, y);
 	cout << hero->getName() << "'s Abilities";
@@ -175,7 +208,7 @@ void showAbility(shared_ptr<Hero>& hero)
 
 
 	x = 11;
-	y = 20;
+	y = 35;
 	gotoXY(x + 3, y);
 	cout << "What will " << hero->getName() << " do?";
 	
@@ -187,7 +220,7 @@ void border()
 {
 	int len, x, y;
 	x = 10;
-	y = 18;
+	y = 33;
 	len = 58;
 	string border(len, '\xCD');
 	gotoXY(x, y);

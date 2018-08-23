@@ -145,7 +145,7 @@
 bool aiplay(shared_ptr<vector<int>>& index1, shared_ptr<vector<int>>& index2, vector<shared_ptr<Hero>>& team1, vector<shared_ptr<Hero>>& team2) {
 
 	int x = 11;
-	int y = 20;
+	int y = 35;
 	int len = 58;
 
 	showStat(team1, false);
@@ -230,10 +230,9 @@ int main()
 	//Team 1
 	vector<shared_ptr<Hero>> team1;
 	team1.push_back(make_shared<Hero>(1, "Mage", "Fireball", pair<int, int>(4, 6)));
-	team1.push_back(make_shared<Hero>(2, "Warrior", "Mortal Strike", pair<int, int>(3, 9)));
-	team1.push_back(make_shared<Hero>(4, "Warlock", "Chaos Bolt", pair<int, int>(5, 5)));
-	team1.push_back(make_shared<Hero>(17, "Monk", "Blackout Kick", pair<int, int>(3, 7)));
-	team1.push_back(make_shared<Hero>(16, "Rogue", "Roll the Dice", pair<int, int>(1, 10)));
+	team1.push_back(make_shared<Hero>(2, "Warrior", "Lightning Bolt", pair<int, int>(3, 9)));
+	team1.push_back(make_shared<Hero>(16, "Rogue", "Shuriken", pair<int, int>(1, 10)));
+	
 
 	//index vector is used to check how many hero's are alive, used for win condition check
 	auto index1 = make_shared<vector<int>>();
@@ -244,9 +243,7 @@ int main()
 
 	//Team 2
 	vector<shared_ptr<Hero>> team2;
-	team2.push_back(make_shared<Hero>(18, "DeathKnight", "Death Strike", pair<int, int>(4, 6)));
-	team2.push_back(make_shared<Hero>(1, "Priest", "Mind Blast", pair<int, int>(3, 4)));
-	team2.push_back(make_shared<Hero>(18, "Paladin", "Judgement", pair<int, int>(5, 7)));
+	team2.push_back(make_shared<Hero>(18, "Shaman", "Lightning Bolt", pair<int, int>(4, 6)));
 	team2.push_back(make_shared<Hero>(14, "Hunter", "Aim Shot", pair<int, int>(3, 5)));
 	team2.push_back(make_shared<Hero>(19, "Druid", "Bite", pair<int, int>(4, 7)));
 
@@ -256,12 +253,14 @@ int main()
 		team2[i]->setTeamNumber("2");
 	}
 
+	
 	//TODO gameover screen and win screen
 	startScreen();
 	system("CLS");
 	cout << endl;
 	cout << endl;
 
+	printHero();
 	while(aiplay(index1,index2,team1,team2) and aiplay(index2, index1, team2, team1)) {
 		
 		cout << endl;
