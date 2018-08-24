@@ -230,7 +230,7 @@ int main()
 	//Team 1
 	vector<shared_ptr<Hero>> team1;
 	team1.push_back(make_shared<Hero>(1, "Mage", "Fireball", pair<int, int>(4, 6)));
-	team1.push_back(make_shared<Hero>(2, "Warrior", "Lightning Bolt", pair<int, int>(3, 9)));
+	team1.push_back(make_shared<Hero>(2, "Warrior", "Mortal Strike", pair<int, int>(3, 9)));
 	team1.push_back(make_shared<Hero>(16, "Rogue", "Shuriken", pair<int, int>(1, 10)));
 	
 
@@ -243,9 +243,9 @@ int main()
 
 	//Team 2
 	vector<shared_ptr<Hero>> team2;
-	team2.push_back(make_shared<Hero>(18, "Shaman", "Lightning Bolt", pair<int, int>(4, 6)));
 	team2.push_back(make_shared<Hero>(14, "Hunter", "Aim Shot", pair<int, int>(3, 5)));
 	team2.push_back(make_shared<Hero>(19, "Druid", "Bite", pair<int, int>(4, 7)));
+	team2.push_back(make_shared<Hero>(18, "Shaman", "Lightning Bolt", pair<int, int>(4, 6)));
 
 	auto index2 = make_shared<vector<int>>();
 	for (int i = 0; i < team2.size(); i++) {

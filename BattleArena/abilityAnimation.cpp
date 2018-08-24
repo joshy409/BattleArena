@@ -19,9 +19,9 @@ void animation(string ability)
 	switch (stringToenum(ability)) {
 
 		case fireball:{
-			string ball[] = { " o ",
-						      "ooo",
-						      " o " };
+			string ball[] = { "-o ",
+						      "-oo",
+						      "-o " };
 			int x = 24;
 			int y = 7;
 			for (int z = 0; z < 20; z++) {
@@ -44,7 +44,7 @@ void animation(string ability)
 						}
 						else {
 							gotoXY(x, y);
-							SetConsoleTextAttribute(hConsole, 14);
+							SetConsoleTextAttribute(hConsole, 12);
 							cout << ball[i][j];
 							x++;
 						}
@@ -54,25 +54,27 @@ void animation(string ability)
 				}
 				Sleep(100);
 			}
+			SetConsoleTextAttribute(hConsole, 7);
 			break;
 		}
 	
 		case aimshot: {
-			string arrow= ">->";
+			string arrow= ">>>--->";
 			int x = 24;
 			int y = 7;
 			for (int z = 0; z < 20; z++) {
 				x -= 1;
 				gotoXY(x, y);
-				cout << "   ";
+				cout << "       ";
 				x += 1;
 				gotoXY(x, y);
-				SetConsoleTextAttribute(hConsole, 14);
+				SetConsoleTextAttribute(hConsole, 10);
 				cout << arrow;
 				x += 1;
 				
 				Sleep(100);
 			}
+			SetConsoleTextAttribute(hConsole, 7);
 			break;
 		}
 
@@ -88,8 +90,8 @@ void animation(string ability)
 				x += 2;
 				Sleep(50);
 			}
+			SetConsoleTextAttribute(hConsole, 7);
 			break;
-
 		}
 
 		case shuriken: {
@@ -123,7 +125,7 @@ void animation(string ability)
 							}
 							else {
 								gotoXY(x, y);
-								SetConsoleTextAttribute(hConsole, 14);
+								SetConsoleTextAttribute(hConsole, 13);
 								cout << vert[i][j];
 								x++;
 							}
@@ -144,7 +146,7 @@ void animation(string ability)
 							}
 							else {
 								gotoXY(x, y);
-								SetConsoleTextAttribute(hConsole, 14);
+								SetConsoleTextAttribute(hConsole, 13);
 								cout << hori[i][j];
 								x++;
 							}
@@ -155,8 +157,13 @@ void animation(string ability)
 				}
 				Sleep(150);
 			}
+			SetConsoleTextAttribute(hConsole, 7);
 			break;
 		}
+
+		default:
+			SetConsoleTextAttribute(hConsole, 7);
+			break;
 	}
 	cin.get(); // wait
 }

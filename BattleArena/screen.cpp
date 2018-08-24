@@ -7,13 +7,11 @@ HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 COORD CursorPosition;
 
 //read the file and print line by line
-std::string getFileContents(std::ifstream& File)
+std::string getFileContents(std::ifstream& File, int x, int y)
 {
 	std::string Lines = "";        //All lines
 	if (File)                      //Check if everything is good
 	{
-		int x = 18;
-		int y = 10;
 		while (File.good())
 		{
 			std::string TempLine;                  //Temp line
@@ -31,13 +29,11 @@ std::string getFileContents(std::ifstream& File)
 	}
 }
 
-std::string getFileContentsReverse(std::ifstream& File)
+std::string getFileContentsReverse(std::ifstream& File, int x, int y)
 {
 	std::string Lines = "";        //All lines
 	if (File)                      //Check if everything is good
 	{
-		int x = 10;
-		int y = 5;
 		while (File.good())
 		{
 			std::string TempLine;                  //Temp line
@@ -59,7 +55,7 @@ void startScreen()
 {
 
 	std::ifstream Reader("startscreen.txt");             //Open file
-	getFileContents(Reader);       //Get file
+	getFileContents(Reader, 18, 10);       //Get file
 	Reader.close();                           //Close file
 
 
@@ -88,9 +84,27 @@ void startScreen()
 }
 
 void printHero() {
-	std::ifstream Reader("mage.txt");             //Open file
-	getFileContentsReverse(Reader);       //Get file
-	Reader.close();                           //Close file
+	std::ifstream mage("mage.txt");             //Open file
+	getFileContentsReverse(mage,10,5);       //Get file
+	mage.close();                           //Close file
+
+	std::ifstream shaman("mage.txt");             //Open file
+	getFileContents(shaman, 56, 24);       //Get file
+	shaman.close();                           //Close file
+
+	std::ifstream warrior("warrior.txt");             //Open file
+	getFileContents(warrior, 10, 14);       //Get file
+	warrior.close();                           //Close file
+
+	std::ifstream druid("druid.txt");             //Open file
+	getFileContents(druid, 10, 25);       //Get file
+	druid.close();                           //Close file
+
+	std::ifstream hunter("hunter.txt");             //Open file
+	getFileContents(hunter, 62, 5);       //Get file
+	hunter.close();                           //Close file
+
+
 }
 
 void endScreen()
@@ -240,7 +254,7 @@ void border()
 void clearBox(bool left, bool right) {
 	int len, x, y;
 	x = 11;
-	y = 19;
+	y = 34;
 	len = 58;
 	
 	if (left) {

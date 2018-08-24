@@ -10,7 +10,7 @@
 #include "Hero.h"
 
 
-std::string getFileContentsReverse(std::ifstream & File);
+
 void startScreen();
 void printHero();
 void endScreen();
@@ -23,4 +23,5 @@ void border();
 void clearBox(bool left, bool right);
 void gotoXY(int x, int y, string text);
 void gotoXY(int x, int y);
-std::string getFileContents(std::ifstream& File);
+std::string getFileContents(std::ifstream& File,int x, int y);
+std::string getFileContentsReverse(std::ifstream & File, int x, int y);
