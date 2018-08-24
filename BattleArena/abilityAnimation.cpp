@@ -10,28 +10,32 @@ enum Abilities {fireball,aimshot,lightningbolt,shuriken};
 
 Abilities stringToenum(string ability);
 
-void animation(string ability)
+void animation(shared_ptr<Hero>& hero, shared_ptr<Hero>& target)
 {
 	HANDLE  hConsole;
 	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
+	clearBox(false, false, true);
+	printHeroByName(hero->getName(),10,14);
+	printHeroByName(target->getName(),56,14);
+
 	int k = 0;
-	switch (stringToenum(ability)) {
+	switch (stringToenum(hero->getAbility())) {
 
 		case fireball:{
 			string ball[] = { "-o ",
 						      "-oo",
 						      "-o " };
-			int x = 24;
-			int y = 7;
+			int x = 10;
+			int y = 16;
 			for (int z = 0; z < 20; z++) {
-				y = 7;
+				y = 16;
 				for (int b = 0; b < 3; b++) {
 					gotoXY(x, y);
 					cout << "   ";
 					y++;
 				}
-				y = 7;
+				y = 16;
 				x++;
 				for (int i = 0; i < 3; i++)
 				{

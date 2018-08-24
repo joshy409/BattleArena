@@ -156,7 +156,7 @@ bool aiplay(shared_ptr<vector<int>>& index1, shared_ptr<vector<int>>& index2, ve
 		player = select(team1.size());
 		if (team1[player]->getHealth() == 0) {
 			showStat(team1, false);
-			clearBox(true, false);
+			clearBox(true, false,false);
 			gotoXY(x + 2, y);
 			cout << team1[player]->getName() << " is dead!";
 			gotoXY(x + 2, y+1);
@@ -176,7 +176,7 @@ bool aiplay(shared_ptr<vector<int>>& index1, shared_ptr<vector<int>>& index2, ve
 		target = select(team2.size());
 		if (team2[target]->getHealth() == 0) {
 			showStat(team2, true);
-			clearBox(true, false);
+			clearBox(true, false,false);
 			gotoXY(x + 2, y);
 			cout << team2[target]->getName() << " is dead!";
 			gotoXY(x + 2, y+1);

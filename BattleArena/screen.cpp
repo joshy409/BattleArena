@@ -84,27 +84,33 @@ void startScreen()
 }
 
 void printHero() {
-	std::ifstream mage("mage.txt");             //Open file
+	std::ifstream mage("Mage.txt");             //Open file
 	getFileContentsReverse(mage,10,5);       //Get file
 	mage.close();                           //Close file
 
-	std::ifstream shaman("mage.txt");             //Open file
+	std::ifstream shaman("Mage.txt");             //Open file
 	getFileContents(shaman, 56, 24);       //Get file
 	shaman.close();                           //Close file
 
-	std::ifstream warrior("warrior.txt");             //Open file
+	std::ifstream warrior("Warrior.txt");             //Open file
 	getFileContents(warrior, 10, 14);       //Get file
 	warrior.close();                           //Close file
 
-	std::ifstream druid("druid.txt");             //Open file
+	std::ifstream druid("Druid.txt");             //Open file
 	getFileContents(druid, 10, 25);       //Get file
 	druid.close();                           //Close file
 
-	std::ifstream hunter("hunter.txt");             //Open file
+	std::ifstream hunter("Hunter.txt");             //Open file
 	getFileContents(hunter, 62, 5);       //Get file
 	hunter.close();                           //Close file
 
+}
 
+void printHeroByName(string name, int x, int y)
+{
+	std::ifstream Reader(name+".txt");             //Open file
+	getFileContentsReverse(Reader, x, x);       //Get file
+	Reader.close();                           //Close file
 }
 
 void endScreen()
@@ -197,7 +203,7 @@ void showAttack(shared_ptr<Hero>& hero, shared_ptr<Hero>& target)
 	gotoXY(x + 2, y+2);
 	cout << "and inflicts " << attack << " damage" << endl;
 	
-	animation(hero->getAbility());
+	animation(hero,target);
 
 	//subtract damage from HP
 	target->setHealth(attack);
@@ -251,7 +257,7 @@ void border()
 }
 
 //clears contents only if the left or the right or both
-void clearBox(bool left, bool right) {
+void clearBox(bool left, bool right, bool up) {
 	int len, x, y;
 	x = 11;
 	y = 34;
@@ -274,6 +280,14 @@ void clearBox(bool left, bool right) {
 		}
 	}
 
+	if (up) {
+		y = 5;
+		for (int i = 0; i < 28; i++) {
+			gotoXY(x-1, y);
+			cout << string(60, ' ');
+			y++;
+		}
+	}
 }
 
 //cursor changer
