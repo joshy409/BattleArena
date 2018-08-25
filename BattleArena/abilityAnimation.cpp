@@ -6,7 +6,7 @@
 // a Dev-C++ tested console application by  vegaseat  07nov2004
 
 #include "display.h"
-enum Abilities {fireball,aimshot,lightningbolt,shuriken};
+enum Abilities {fireball,aimshot,lightningbolt,shuriken,mortalstrike,bite};
 
 Abilities stringToenum(string ability);
 
@@ -15,9 +15,23 @@ void animation(shared_ptr<Hero>& hero, shared_ptr<Hero>& target)
 	HANDLE  hConsole;
 	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
+	int x = 11;
+	int x2 = 56;
+	int y = 11;
 	clearBox(false, false, true);
-	printHeroByName(hero->getName(),10,14);
-	printHeroByName(target->getName(),56,14);
+	if (hero->getTeamNumber() == "1") {
+		printHeroByName(hero, x, y);
+	}
+	else {
+		printHeroByName(target, x, y);
+	}
+	
+	if (hero->getTeamNumber() == "2") {
+		printHeroByName(hero, x2, y);
+	}
+	else {
+		printHeroByName(target, x2, y);
+	}
 
 	int k = 0;
 	switch (stringToenum(hero->getAbility())) {
@@ -26,16 +40,16 @@ void animation(shared_ptr<Hero>& hero, shared_ptr<Hero>& target)
 			string ball[] = { "-o ",
 						      "-oo",
 						      "-o " };
-			int x = 10;
-			int y = 16;
+			int x = 25;
+			int y = 12;
 			for (int z = 0; z < 20; z++) {
-				y = 16;
+				y = 12;
 				for (int b = 0; b < 3; b++) {
 					gotoXY(x, y);
 					cout << "   ";
 					y++;
 				}
-				y = 16;
+				y = 12;
 				x++;
 				for (int i = 0; i < 3; i++)
 				{
@@ -63,18 +77,18 @@ void animation(shared_ptr<Hero>& hero, shared_ptr<Hero>& target)
 		}
 	
 		case aimshot: {
-			string arrow= ">>>--->";
-			int x = 24;
-			int y = 7;
+			string arrow= "<---<<<";
+			int x = 47;
+			int y = 13;
 			for (int z = 0; z < 20; z++) {
-				x -= 1;
+				x += 1;
 				gotoXY(x, y);
 				cout << "       ";
-				x += 1;
+				x -= 1;
 				gotoXY(x, y);
 				SetConsoleTextAttribute(hConsole, 10);
 				cout << arrow;
-				x += 1;
+				x -= 1;
 				
 				Sleep(100);
 			}
@@ -85,13 +99,13 @@ void animation(shared_ptr<Hero>& hero, shared_ptr<Hero>& target)
 		case lightningbolt: {
 			string lightning =  "/\\";
 
-			int x = 24;
-			int y = 7;
-			for (int z = 0; z < 20; z++) {
+			int x = 53;
+			int y = 13;
+			for (int z = 0; z < 15; z++) {
 				gotoXY(x, y);
 				SetConsoleTextAttribute(hConsole, 14);
 				cout << lightning;
-				x += 2;
+				x -= 2;
 				Sleep(50);
 			}
 			SetConsoleTextAttribute(hConsole, 7);
@@ -105,16 +119,16 @@ void animation(shared_ptr<Hero>& hero, shared_ptr<Hero>& target)
 			string hori[] = { "  o  ",
 				              "ooooo",
 				              "  o  " };
-			int x = 24;
-			int y = 7;
+			int x = 25;
+			int y = 12;
 			for (int z = 0; z < 20; z++) {
-				y = 7;
+				y = 4;
 				for (int b = 0; b < 3; b++) {
 					gotoXY(x, y);
 					cout << "     ";
 					y++;
 				}
-				y = 7;
+				y = 4;
 				x++;
 				if (z%2 == 0) {
 					for (int i = 0; i < 3; i++)
@@ -159,7 +173,7 @@ void animation(shared_ptr<Hero>& hero, shared_ptr<Hero>& target)
 						x = 24 + z;
 					}
 				}
-				Sleep(150);
+				Sleep(75);
 			}
 			SetConsoleTextAttribute(hConsole, 7);
 			break;
@@ -169,7 +183,6 @@ void animation(shared_ptr<Hero>& hero, shared_ptr<Hero>& target)
 			SetConsoleTextAttribute(hConsole, 7);
 			break;
 	}
-	cin.get(); // wait
 }
 
 Abilities stringToenum(string ability) {
@@ -177,4 +190,6 @@ Abilities stringToenum(string ability) {
 	if (ability == "Aim Shot") return aimshot;
 	if (ability == "Lightning Bolt") return lightningbolt;
 	if (ability == "Shuriken") return shuriken;
+	if (ability == "Mortal Strike") return mortalstrike;
+	if (ability == "Bite") return bite;
 }

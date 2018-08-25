@@ -2,48 +2,26 @@
 // console width 80
 // console height 25
 
-std::string getFileContents(std::ifstream&);            //Gets file contents
+
 HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 COORD CursorPosition;
 
 //read the file and print line by line
-std::string getFileContents(std::ifstream& File, int x, int y)
+string getFileContents(std::ifstream& File, int x, int y)
 {
-	std::string Lines = "";        //All lines
+	string Lines = "";        //All lines
 	if (File)                      //Check if everything is good
 	{
 		while (File.good())
 		{
-			std::string TempLine;                  //Temp line
-			std::getline(File, TempLine);        //Get temp line
-			gotoXY(x, y, TempLine);
+			string TempLine;                  //Temp line
+			getline(File, TempLine);        //Get temp line
+			gotoXY(x, y, TempLine);			//print Templine at given x,y cursor position
 			cout << endl;
 			y++;
 		}
 		return Lines;
 
-	}
-	else                           //Return error
-	{
-		return "ERROR File does not exist.";
-	}
-}
-
-std::string getFileContentsReverse(std::ifstream& File, int x, int y)
-{
-	std::string Lines = "";        //All lines
-	if (File)                      //Check if everything is good
-	{
-		while (File.good())
-		{
-			std::string TempLine;                  //Temp line
-			std::getline(File, TempLine);        //Get temp line
-			reverse(TempLine.begin(),TempLine.end());
-			gotoXY(x, y, TempLine);
-			cout << endl;
-			y++;
-		}
-		return Lines;
 	}
 	else                           //Return error
 	{
@@ -66,12 +44,8 @@ void startScreen()
 	len = startprompt.length();
 
 	// string startprompt rotates until Enter key is pressed
-	bool exit = true;
-	while (exit) {
-		if (GetAsyncKeyState(VK_RETURN))
-		{
-			exit = false;
-		}
+	
+	while (true) {
 		gotoXY(20, 22, startprompt);
 		holder = startprompt[len];
 		for (x = len; x>0; x--)
@@ -80,57 +54,150 @@ void startScreen()
 		}
 		startprompt[0] = holder;
 		Sleep(100);
+
+		if (GetAsyncKeyState(VK_RETURN)) {
+			while (true) {
+				if (!GetAsyncKeyState(VK_RETURN)) {
+					break;
+				}
+			}
+			break;
+		}
 	} 
+	//clear the screen
+	system("CLS");
+	
+
+	//creat a textbox to display text for the game
+	x = 10;
+	int y = 30;
+	len = 58;
+	string border(len, '\xCD');
+	gotoXY(x, y);
+	cout << "\xC9" << border << "\xBB" << endl;
+	y++;
+	gotoXY(x, y);
+	y++;
+	for (int i = 0; i < 6; i++) {
+		cout << "\xBA" << string(len / 2, ' ') << "|" << string(len / 2, ' ') << "\b\xBA" << endl;
+		gotoXY(x, y);
+		y++;
+	}
+	cout << "\xC8" << border << "\xBC" << endl;
 }
 
-void printHero() {
-	std::ifstream mage("Mage.txt");             //Open file
-	getFileContentsReverse(mage,10,5);       //Get file
-	mage.close();                           //Close file
 
-	std::ifstream shaman("Mage.txt");             //Open file
-	getFileContents(shaman, 56, 24);       //Get file
-	shaman.close();                           //Close file
+void printHero(vector<shared_ptr<Hero>>& team) {
+	int x;
+	int y = 2;
 
-	std::ifstream warrior("Warrior.txt");             //Open file
-	getFileContents(warrior, 10, 14);       //Get file
-	warrior.close();                           //Close file
-
-	std::ifstream druid("Druid.txt");             //Open file
-	getFileContents(druid, 10, 25);       //Get file
-	druid.close();                           //Close file
-
-	std::ifstream hunter("Hunter.txt");             //Open file
-	getFileContents(hunter, 62, 5);       //Get file
-	hunter.close();                           //Close file
-
+	if (team[0]->getTeamNumber() == "1") {
+		x = 10;
+		for (auto i : team) {
+			if (i->getHealth() == 0) {
+				grave(i->getName(), "1", x, y);
+				y += 10;
+			}
+			else {
+				printHeroByName(i, x, y);
+				y += 10;
+			}
+		}
+	} else {
+		x = 70;
+		for (auto i : team) {
+			if (i->getHealth() == 0) {
+				grave(i->getName(), "2",x,y);
+				y += 10;
+			}
+			else {
+				printHeroByName(i, x - i->getWidth(), y);
+				y += 10;
+			}
+		}
+	}
+    
 }
 
-void printHeroByName(string name, int x, int y)
+void printHeroByName(shared_ptr<Hero>& hero, int x, int y)
 {
-	std::ifstream Reader(name+".txt");             //Open file
-	getFileContentsReverse(Reader, x, x);       //Get file
-	Reader.close();                           //Close file
+	for (auto i : hero->getAscii()) {
+		gotoXY(x, y);
+		cout << i;
+		y++;
+	}
+
 }
 
-void endScreen()
+void grave(string name, string teamNumber, int x, int y) {
+	//int len = (9 - name.size()) / 2;
+	//int len2 = (9 - name.size()) - (9 - name.size()) / 2;
+
+	if (teamNumber == "1") {
+		vector<string> team1grave = { "     _|_     "
+			,"   ___|___   "
+			," /~/~     ~\\ "
+			,"| |         |"
+			,"| |" + string((9 - name.size()) - (9 - name.size()) / 2,' ') + name + string((9 - name.size()) / 2,' ') + "|"
+			,"| |         |"
+			,"| |         |"
+			,"|_|_ _ _ __ |" };
+
+		for (auto i : team1grave) {
+			gotoXY(x, y);
+			cout << i;
+			y++;
+		}
+	}
+	else {
+		vector<string> team2grave = { "     _|_     "
+			,"   ___|___   "
+			," /~     ~\\~\\ "
+			,"|         | |"
+			,"|" + string((9 - name.size()) / 2,' ') + name + string((9 - name.size()) - (9 - name.size()) / 2,' ') + "| |"
+			,"|         | |"
+			,"|         | |"
+			,"|_ _ _ __ |_|" };
+
+		for (auto i : team2grave) {
+			gotoXY(x, y);
+			cout << i;
+			y++;
+		}
+	}
+}
+
+void endScreen(string winningTeam)
 {
+	int x = 22;
+	int y = 12;
+	system("CLS");
+	if (winningTeam == "1") {
+		std::ifstream Reader("Team1win.txt");             //Open file
+		getFileContents(Reader, x, y);       //Get file
+		Reader.close();                           //Close file
+	}
+	else {
+		std::ifstream Reader("Team2win.txt");             //Open file
+		getFileContents(Reader, x, y);       //Get file
+		Reader.close();                           //Close file
+	}
 }
 
 //returns index of the hero user selected
 int select(int size) {
 	int len = 58;
 	int x = 11 + len / 2 + 2;
-	int y = 35;
+	int y = 32;
 
 	//keeps track of cursor's y position when UP or DOWN arrow key is pressed
 	//infinite loop until Enter key is pressed
 	while (true) {
-		if (y < 35) {
-			y = 35 + size - 1;
+		if (y < 32) {
+			y = 32 + size - 1;
 		}
-		else if (y > 35 + size - 1) {
-			y = 35;
+		else if (y > 32 + size - 1) {
+			y = 32;
 		}
 		gotoXY(x, y, ">");
 		if (GetAsyncKeyState(VK_DOWN))
@@ -144,21 +211,26 @@ int select(int size) {
 		}
 		Sleep(100);
 		if (GetAsyncKeyState(VK_RETURN)) {
+			while (true) {
+				if (!GetAsyncKeyState(VK_RETURN)) {
+					break;
+				}
+			}
 			break;
 		}
 		Sleep(200);
 	}
-	return y % 35;
+	return y % 32;
 }
 
 //displays team number, member of the team and their current and max health
 void showStat(vector<shared_ptr<Hero>>& team, bool target)
 {
 	//clears textbox
-	border();
+	clearBox(true, true, false);
 
 	int x = 11;
-	int y = 34;
+	int y = 31;
 	int len = 58;
 	gotoXY(x + len / 2 + 4, y);
 	cout << "Team " << team[0]->getTeamNumber() << string(9, ' ') << "HP";
@@ -171,7 +243,7 @@ void showStat(vector<shared_ptr<Hero>>& team, bool target)
 	}
 
 	x = 11;
-	y = 35;
+	y = 32;
 
 	//shows different prompt if the function was called for defending team
 	if (!target) {
@@ -192,18 +264,34 @@ void showAttack(shared_ptr<Hero>& hero, shared_ptr<Hero>& target)
 	std::uniform_int_distribution<> damage(hero->getMinDamage(), hero->getMaxDamage()); // define the range
 	int attack = damage(eng);
 
-	border();
+	clearBox(true, true, false);
 	int x = 11;
-	int y = 35;
-
+	int y = 32;
+	int len = 58;
 	gotoXY(x + 2, y);
 	cout << hero->getName() << " attacks " << target->getName(); 
 	gotoXY(x + 2, y+1);
 	cout << "with " << hero->getAbility(); 
-	gotoXY(x + 2, y+2);
-	cout << "and inflicts " << attack << " damage" << endl;
 	
 	animation(hero,target);
+
+	gotoXY(x + len / 2 + 3, y);
+	cout << hero->getAbility() << " did "; 
+	gotoXY(x + len / 2 + 3, y+1);
+	cout << attack << " damage" << endl;
+
+	while (true) {
+		gotoXY(66,36, "^");
+		if (GetAsyncKeyState(VK_RETURN)) {
+			while (true) {
+				if (!GetAsyncKeyState(VK_RETURN)) {
+					break;
+				}
+			}
+			break;
+		}
+	}
+
 
 	//subtract damage from HP
 	target->setHealth(attack);
@@ -213,9 +301,9 @@ void showAttack(shared_ptr<Hero>& hero, shared_ptr<Hero>& target)
 //displays abilitis of the chosen hero
 void showAbility(shared_ptr<Hero>& hero)
 {
-	border();
+	clearBox(true, true, false);
 	int x = 11;
-	int y = 34;
+	int y = 31;
 	int len = 58;
 	gotoXY(x + len / 2 + 4, y);
 	cout << hero->getName() << "'s Abilities";
@@ -228,42 +316,21 @@ void showAbility(shared_ptr<Hero>& hero)
 
 
 	x = 11;
-	y = 35;
+	y = 32;
 	gotoXY(x + 3, y);
 	cout << "What will " << hero->getName() << " do?";
 	
-}
-
-//creates a textbox to show text displays
-//entirely clears the contents of the textbox
-void border()
-{
-	int len, x, y;
-	x = 10;
-	y = 33;
-	len = 58;
-	string border(len, '\xCD');
-	gotoXY(x, y);
-	cout << "\xC9" << border << "\xBB" << endl;
-	y++;
-	gotoXY(x, y);
-	y++;
-	for (int i = 0; i < 6; i++) {
-		cout << "\xBA" << string(len / 2, ' ') << "|" << string(len / 2, ' ') << "\b\xBA" << endl;
-		gotoXY(x, y);
-		y++;
-	}
-	cout << "\xC8" << border << "\xBC" << endl;
 }
 
 //clears contents only if the left or the right or both
 void clearBox(bool left, bool right, bool up) {
 	int len, x, y;
 	x = 11;
-	y = 34;
+	
 	len = 58;
 	
 	if (left) {
+		y = 31;
 		for (int i = 0; i < 6; i++) {
 			gotoXY(x, y);
 			cout << string(len / 2, ' ');
@@ -272,16 +339,17 @@ void clearBox(bool left, bool right, bool up) {
 	}
 
 	if (right) {
-		x = x + len / 2 + 3;
+		y = 31;
+		x = x + len / 2 + 1;
 		for (int i = 0; i < 6; i++) {
 			gotoXY(x, y);
-			cout << string(len / 2, ' ');
+			cout << string(len / 2-1, ' ');
 			y++;
 		}
 	}
 
 	if (up) {
-		y = 5;
+		y = 2;
 		for (int i = 0; i < 28; i++) {
 			gotoXY(x-1, y);
 			cout << string(60, ' ');
