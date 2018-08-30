@@ -1,6 +1,8 @@
 ﻿#include "display.h"
 //#undef max
 
+bool myfunction(shared_ptr<Hero> first, shared_ptr<Hero> second);
+
 //TODO vs comp mode computer randomly selects
 /*bool play(vector<int>& index1, vector<int>& index2, vector<Hero>& team1, vector<Hero>& team2) {
 
@@ -155,9 +157,14 @@ bool aiplay(shared_ptr<vector<int>>& index1, shared_ptr<vector<int>>& index2, ve
 		index2->pop_back();
 		cout << endl;
 	}
+	sort(team1.begin(), team1.end(), myfunction);
+	sort(team2.begin(), team2.end(), myfunction);
 	return true;
 }
 
+bool myfunction(shared_ptr<Hero> first, shared_ptr<Hero> second) {
+	return (first->getHealth() < second->getHealth());
+}
 
 //TODO: add comments, implement menu screen to chosse pvp, vscomp and pve
 //TODO: balance teams
@@ -205,7 +212,7 @@ int main()
 	vector<string> ninja =
 	{   "          ",
 	    "          ",
-		"    ___  /",
+		"    _v_  /",
 		" ~(/`U`)/ ",
 		" /    c=) ",
 		"(_/>   i  ",
@@ -224,9 +231,9 @@ int main()
 	//Using smart pointers for memory management
 	//Team 1
 	vector<shared_ptr<Hero>> team1;
-	team1.push_back(make_shared<Hero>(1, "Mage", "Fireball", pair<int, int>(4, 6),"1", mage));
-	team1.push_back(make_shared<Hero>(2, "Warrior", "Mortal Strike", pair<int, int>(3, 9),"1", warrior));
-	team1.push_back(make_shared<Hero>(1, "Druid", "Bite", pair<int, int>(4, 7), "1", druid));
+	team1.push_back(make_shared<Hero>(10, "Mage", "Fireball", pair<int, int>(4, 6),"1", mage));
+	team1.push_back(make_shared<Hero>(16, "Warrior", "Mortal Strike", pair<int, int>(3, 9),"1", warrior));
+	team1.push_back(make_shared<Hero>(13, "Druid", "Bite", pair<int, int>(4, 7), "1", druid));
 	
 	
 
@@ -238,9 +245,9 @@ int main()
 
 	//Team 2
 	vector<shared_ptr<Hero>> team2;
-	team2.push_back(make_shared<Hero>(2, "Hunter", "Aim Shot", pair<int, int>(3, 5),"2",hunter));
-	team2.push_back(make_shared<Hero>(2, "Shaman", "Lightning Bolt", pair<int, int>(4, 6),"2",shaman));
-	team2.push_back(make_shared<Hero>(2, "Ninja", "Shuriken", pair<int, int>(1, 10), "2",ninja));
+	team2.push_back(make_shared<Hero>(11, "Hunter", "Aim Shot", pair<int, int>(3, 5),"2",hunter));
+	team2.push_back(make_shared<Hero>(10, "Shaman", "Lightning Bolt", pair<int, int>(4, 6),"2",shaman));
+	team2.push_back(make_shared<Hero>(9, "Ninja", "Shuriken", pair<int, int>(1, 10), "2",ninja));
 
 	auto index2 = make_shared<vector<int>>();
 	for (int i = 0; i < team2.size(); i++) {
