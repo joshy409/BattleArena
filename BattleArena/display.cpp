@@ -6,9 +6,12 @@
 HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 COORD CursorPosition;
 
+
+
 //displays start screen
 void startScreen()
 {
+	
 	int x = 18;
 	int y = 11;
 	
@@ -34,7 +37,7 @@ void startScreen()
 	char holder = ' ';
 	int len = startprompt.length();
 
-	// string startprompt rotates until Enter key is pressed
+	// string startprompt loops until Enter key is pressed
 	
 	while (true) {
 		gotoXY(20, 23, startprompt);
@@ -122,9 +125,9 @@ void printHero(vector<shared_ptr<Hero>>& team) {
 	int y = 2;
 
 	if (team[0]->getTeamNumber() == "1") {
-		x = 10;
+		x = 10; //print on left side
 		for (auto i : team) {
-			if (i->getHealth() == 0) {
+			if (i->getHealth() == 0) { //print grave instead if health == 0
 				grave(i->getName(), "1", x, y);
 				y += 10;
 			}
@@ -134,9 +137,9 @@ void printHero(vector<shared_ptr<Hero>>& team) {
 			}
 		}
 	} else {
-		x = 70;
+		x = 70; // print on right side
 		for (auto i : team) {
-			if (i->getHealth() == 0) {
+			if (i->getHealth() == 0) { //print grave instead if health == 0
 				grave(i->getName(), "2",x,y);
 				y += 10;
 			}
@@ -166,7 +169,7 @@ void grave(string name, string teamNumber, int x, int y) {
 			,"   ___|___   "
 			," /~/~     ~\\ "
 			,"| |         |"
-			,"| |" + string((9 - name.size()) - (9 - name.size()) / 2,' ') + name + string((9 - name.size()) / 2,' ') + "|"
+			,"| |" + string((9 - name.size()) - (9 - name.size()) / 2,' ') + name + string((9 - name.size()) / 2,' ') + "|" // print hero name in the middle
 			,"| |         |"
 			,"| |         |"
 			,"|_|_ _ _ __ |" };
@@ -182,7 +185,7 @@ void grave(string name, string teamNumber, int x, int y) {
 			,"   ___|___   "
 			," /~     ~\\~\\ "
 			,"|         | |"
-			,"|" + string((9 - name.size()) / 2,' ') + name + string((9 - name.size()) - (9 - name.size()) / 2,' ') + "| |"
+			,"|" + string((9 - name.size()) / 2,' ') + name + string((9 - name.size()) - (9 - name.size()) / 2,' ') + "| |" // print hero name in the middle
 			,"|         | |"
 			,"|         | |"
 			,"|_ _ _ __ |_|" };
@@ -220,6 +223,7 @@ int select(int size) {
 			y--;
 		}
 		Sleep(100);
+
 		//wait for enter key press
 		if (GetAsyncKeyState(VK_RETURN)) {
 			while (true) {

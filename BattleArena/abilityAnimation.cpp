@@ -17,7 +17,7 @@ void animation(shared_ptr<Hero>& hero, shared_ptr<Hero>& target)
 
 	clearBox(false, false, true);
 
-	//print team 1 hero on the left
+	//print hero on team 1 on the left
 	if (hero->getTeamNumber() == "1") {
 		printHeroByName(hero, 10, 12);
 	}
@@ -25,7 +25,7 @@ void animation(shared_ptr<Hero>& hero, shared_ptr<Hero>& target)
 		printHeroByName(target, 10, 12);
 	}
 	
-	//print team 2 hero on the right
+	//print hero on team 2 on the right
 	if (hero->getTeamNumber() == "2") {
 		printHeroByName(hero, 70-hero->getWidth(), 12);
 	}
@@ -109,20 +109,21 @@ void animation(shared_ptr<Hero>& hero, shared_ptr<Hero>& target)
 
 		case shuriken: {
 			vector<string> vert = { "o   o",
-							  "  o  ",
-							  "o   o" };
+							        "  o  ",
+							        "o   o" };
 			vector<string> hori = { "  o  ",
-				              "ooooo",
-				              "  o  " };
+				                    "ooooo",
+				                    "  o  " };
+
 			int x = 70 - hero->getWidth() - vert[0].length() - 1;
-			int y = 12;
-			for (int z = 0; z < 70 - target->getWidth() - hero->getWidth() - 10 + 3; z++) {
-				y = 12;
+			int y = 13;
+			for (int z = 0; z < 70 - target->getWidth() - hero->getWidth() - 10; z++) {
+				y = 13;
 				for (int b = 0; b < vert.size(); b++) {
 					gotoXY(x, y, "     ");
 					y++;
 				}
-				y = 12;
+				y = 13;
 				x--;
 				if (z%2 == 0) {
 					for (int i = 0; i < vert.size(); i++)
