@@ -1,4 +1,4 @@
-#include "display.h"
+﻿#include "display.h"
 //#undef max
 
 //TODO AI mode
@@ -47,7 +47,7 @@
 bool aiplay(shared_ptr<vector<int>>& index1, shared_ptr<vector<int>>& index2, vector<shared_ptr<Hero>>& team1, vector<shared_ptr<Hero>>& team2) {
 
 	int x = 11;
-	int y = 32;
+	int y = 33;
 	int len = 58;
 
 	clearBox(false, false, true);
@@ -65,17 +65,15 @@ bool aiplay(shared_ptr<vector<int>>& index1, shared_ptr<vector<int>>& index2, ve
 		if (team1[player]->getHealth() == 0) {
 			showStat(team1, false);
 			clearBox(true, false,false);
-			gotoXY(x + 2, y);
-			cout << team1[player]->getName() << " is dead!";
-			gotoXY(x + 2, y+1);
-			cout << "Please select again";
+			gotoXY(x + 2, y, team1[player]->getName() + " is dead!");
+			gotoXY(x + 2, y+1, "Please select again");
 			continue;
 		}
 		break;
 	}
 
 	showAbility(team1[player]);
-	int ablility = select(index1->size());
+	int ablility = select(1);
 
 	//player selection error handling
 	showStat(team2, true);
@@ -85,10 +83,8 @@ bool aiplay(shared_ptr<vector<int>>& index1, shared_ptr<vector<int>>& index2, ve
 		if (team2[target]->getHealth() == 0) {
 			showStat(team2, true);
 			clearBox(true, false,false);
-			gotoXY(x + 2, y);
-			cout << team2[target]->getName() << " is dead!";
-			gotoXY(x + 2, y+1);
-			cout << "Please select again";
+			gotoXY(x + 2, y, team2[target]->getName() + " is dead!");
+			gotoXY(x + 2, y+1, "Please select again");
 			continue;
 		}
 		break;
@@ -98,14 +94,14 @@ bool aiplay(shared_ptr<vector<int>>& index1, shared_ptr<vector<int>>& index2, ve
 
 	//when a hero dies check if it was the last hero on the team
 	if (team2[target]->getHealth() <= 0 and index2->size() == 1) { //when it was the last hero
+		clearBox(false, true, false);
+		gotoXY(x + len / 2 + 3, y, team2[target]->getName() + " died");
 		
-		gotoXY(x + len / 2 + 4, y);
-		cout << team2[target]->getName() << " died" << endl;
 		team2[target]->setHealth(team2[target]->getHealth()); //sets health to 0
-		cout << endl;
-
+		
+		//wait for enter key press
 		while (true) {
-			gotoXY(66, 36, "^");
+			gotoXY(66, 37, "^");
 			if (GetAsyncKeyState(VK_RETURN)) {
 				while (true) {
 					if (!GetAsyncKeyState(VK_RETURN)) {
@@ -116,14 +112,16 @@ bool aiplay(shared_ptr<vector<int>>& index1, shared_ptr<vector<int>>& index2, ve
 			}
 		}
 
-		clearBox(true, false, false);
-		gotoXY(x + 2, y);
-		cout << "All the characters in ";
-		gotoXY(x + 2, y+1);
-		cout <<"Team " << team2[0]->getTeamNumber() << " is dead!" << endl;
+		clearBox(true, true, true);
+		//print every hero
+		printHero(team1);
+		printHero(team2);
 
+		gotoXY(x + 2, y, "All the characters in ");
+		gotoXY(x + 2, y+1, "Team " + team2[0]->getTeamNumber() + " is dead!");
+		//wait for enter key press
 		while (true) {
-			gotoXY(66, 39, "^");
+			gotoXY(66, 37, "^");
 			if (GetAsyncKeyState(VK_RETURN)) {
 				while (true) {
 					if (!GetAsyncKeyState(VK_RETURN)) {
@@ -139,10 +137,11 @@ bool aiplay(shared_ptr<vector<int>>& index1, shared_ptr<vector<int>>& index2, ve
 
 	} else if (team2[target]->getHealth() <= 0) {
 		clearBox(false, true, false);
-		gotoXY(x + len / 2 + 4, y);
-		cout << team2[target]->getName() << " died" << endl;
+		gotoXY(x + len / 2 + 3, y, team2[target]->getName() + " died");
+		
+		//wait for enter key press
 		while (true) {
-			gotoXY(66, 36, "^");
+			gotoXY(66, 37, "^");
 			if (GetAsyncKeyState(VK_RETURN)) {
 				while (true) {
 					if (!GetAsyncKeyState(VK_RETURN)) {
@@ -161,64 +160,66 @@ bool aiplay(shared_ptr<vector<int>>& index1, shared_ptr<vector<int>>& index2, ve
 
 
 
-vector<string> mage =
-{ "   __\\/__     "
-,"   //''\\\\  _ ."
-,"   \\_||_/-) (-"
-,"   /_)(_\\ .'. "
-,"   / . |   |  "
-,"  /  . |   |  "
-,".'_____\, .'. " };
-
-vector<string> warrior =
-{ "  v__         /|"
-,"__|==)_      / )"
-,"|_\\`+'_/)   -/|/"
-," \\ )!/( | _/~/  "
-," |\\\\._//_/~/    "
-," (#`(_)7~       "
-," \\#|  \#|       "
-," |#b  (>b       " };
-
-vector<string> hunter =
-{ " /|    "
-,"/_|_{) "
-,"| |__\\"
-,"\\ |  ( "
-," \\|  ) "
-,"    /| "
-,"    \\ \\"
-,"    ~ ~" };
-
-vector<string> shaman =
-{ "     __/\\__   "
-,". _  \\\\''//   "
-,"-( )-/_||_\\   "
-," .'. \\_()_/   "
-,"  |   | . \\   "
-,"  |   | .  \\  "
-," .'. ,\\_____'." };
-
-vector<string> rogue =
-{ "     __/\\__   "
-,". _  \\\\''//   "
-,"-( )-/_||_\\   "
-," .'. \\_()_/   "
-,"  |   | . \\   "
-,"  |   | .  \\  "
-," .'. ,\\_____'." };
-
-vector<string> druid =
-{ " ..------~~~--.__     "
-,"  /               c~\\ "
-,"  /             \\__ `\\"
-,"  |  /~~--__/  /'\ ~~'"
-," /'/'\\ |    | |`\\ \\_  "
-,"`-))  `-))  `-)) `-)) " };
-
-
 int main()
 {
+	vector<string> mage =
+	{ "   __\\/__     "
+		,"   //''\\\\  _ ."
+		,"   \\_||_/-) (-"
+		,"   /_)(_\\ .'. "
+		,"   / . |   |  "
+		,"  /  . |   |  "
+		,".'_____\, .'. " };
+
+	vector<string> warrior =
+	{ "  v__         /|"
+		,"__|==)_      / )"
+		,"|_\\`+'_/)   -/|/"
+		," \\ )!/( | _/~/  "
+		," |\\\\._//_/~/    "
+		," (#`(_)7~       "
+		," \\#|  \#|       "
+		," |#b  (>b       " };
+
+	vector<string> hunter =
+	{ " /|    "
+		,"/_|_{) "
+		,"| |__\\"
+		,"\\ |  ( "
+		," \\|  ) "
+		,"    /| "
+		,"    \\ \\"
+		,"    ~ ~" };
+
+	vector<string> shaman =
+	{ "     __/\\__   "
+		,". _  \\\\''//   "
+		,"-( )-/_||_\\   "
+		," .'. \\_()_/   "
+		,"  |   | . \\   "
+		,"  |   | .  \\  "
+		," .'. ,\\_____'." };
+
+	//TODO: needs new art
+	vector<string> ninja =
+	{   "          ",
+	    "          ",
+		"    ___  /",
+		" ~(/`U`)/ ",
+		" /    c=) ",
+		"(_/>   i  ",
+		" /(_/ ^ U " };
+
+	vector<string> druid =
+	{   
+		"                       ",
+		 " ..------~~~--.__     "
+		,"  /               c~\\ "
+		,"  /             \\__ `\\"
+		,"  |  /~~--__/  /'\ ~~'"
+		," /'/'\\ |    | |`\\ \\_  "
+		,"`-))  `-))  `-)) `-)) " };
+
 	//Using smart pointers for memory management
 	//Team 1
 	vector<shared_ptr<Hero>> team1;
@@ -236,9 +237,9 @@ int main()
 
 	//Team 2
 	vector<shared_ptr<Hero>> team2;
-	team2.push_back(make_shared<Hero>(12, "Hunter", "Aim Shot", pair<int, int>(3, 5),"2",hunter));
-	team2.push_back(make_shared<Hero>(12, "Shaman", "Lightning Bolt", pair<int, int>(4, 6),"2",shaman));
-	team2.push_back(make_shared<Hero>(12, "Rogue", "Shuriken", pair<int, int>(1, 10), "2",rogue));
+	team2.push_back(make_shared<Hero>(2, "Hunter", "Aim Shot", pair<int, int>(3, 5),"2",hunter));
+	team2.push_back(make_shared<Hero>(2, "Shaman", "Lightning Bolt", pair<int, int>(4, 6),"2",shaman));
+	team2.push_back(make_shared<Hero>(2, "Ninja", "Shuriken", pair<int, int>(1, 10), "2",ninja));
 
 	auto index2 = make_shared<vector<int>>();
 	for (int i = 0; i < team2.size(); i++) {
@@ -247,8 +248,20 @@ int main()
 
 	startScreen();
 	
-	while(aiplay(index1,index2,team1,team2) and aiplay(index2, index1, team2, team1)) {
+	while(aiplay(index1,index2,team1,team2) and aiplay(index2, index1, team2, team1)) {}
 
+	//wait for enter key press
+	while (true) {
+		gotoXY(66, 37, "^");
+		if (GetAsyncKeyState(VK_RETURN)) {
+			while (true) {
+				if (!GetAsyncKeyState(VK_RETURN)) {
+					break;
+				}
+			}
+			break;
+		}
 	}
+
 }
 

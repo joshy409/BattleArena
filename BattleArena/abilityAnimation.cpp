@@ -15,45 +15,43 @@ void animation(shared_ptr<Hero>& hero, shared_ptr<Hero>& target)
 	HANDLE  hConsole;
 	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	int x = 11;
-	int x2 = 56;
-	int y = 11;
 	clearBox(false, false, true);
+
+	//print team 1 hero on the left
 	if (hero->getTeamNumber() == "1") {
-		printHeroByName(hero, x, y);
+		printHeroByName(hero, 10, 12);
 	}
 	else {
-		printHeroByName(target, x, y);
+		printHeroByName(target, 10, 12);
 	}
 	
+	//print team 2 hero on the right
 	if (hero->getTeamNumber() == "2") {
-		printHeroByName(hero, x2, y);
+		printHeroByName(hero, 70-hero->getWidth(), 12);
 	}
 	else {
-		printHeroByName(target, x2, y);
+		printHeroByName(target, 70-target->getWidth(), 12);
 	}
 
-	int k = 0;
 	switch (stringToenum(hero->getAbility())) {
 
-		case fireball:{
-			string ball[] = { "-o ",
+		case fireball: {
+			vector <string> ball = { "-o ",
 						      "-oo",
 						      "-o " };
-			int x = 25;
-			int y = 12;
-			for (int z = 0; z < 20; z++) {
-				y = 12;
-				for (int b = 0; b < 3; b++) {
-					gotoXY(x, y);
-					cout << "   ";
+			int x = hero->getWidth() + 10;
+			int y = 13;
+			for (int z = 0; z < 70 - target->getWidth() - hero->getWidth() - 10 + 2; z++) {
+				y = 13;
+				for (int b = 0; b < ball.size(); b++) {
+					gotoXY(x, y, "   ");
 					y++;
 				}
-				y = 12;
+				y = 13;
 				x++;
-				for (int i = 0; i < 3; i++)
+				for (int i = 0; i < ball.size(); i++)
 				{
-					for (int j = 0; j < 3; j++) {
+					for (int j = 0; j < ball[0].length(); j++) {
 						if (ball[i][j] == ' ') {
 							gotoXY(x, y);
 							SetConsoleTextAttribute(hConsole, 0);
@@ -68,29 +66,27 @@ void animation(shared_ptr<Hero>& hero, shared_ptr<Hero>& target)
 						}
 					}
 					y++;
-					x = 24 + z;
+					x = hero->getWidth() + 10 + z;
 				}
-				Sleep(100);
+				Sleep(65);
 			}
 			SetConsoleTextAttribute(hConsole, 7);
 			break;
 		}
 	
 		case aimshot: {
-			string arrow= "<---<<<";
-			int x = 47;
-			int y = 13;
-			for (int z = 0; z < 20; z++) {
-				x += 1;
-				gotoXY(x, y);
-				cout << "       ";
-				x -= 1;
-				gotoXY(x, y);
+			string arrow = "<---<<<";
+			int x = 70-hero->getWidth()-arrow.length()-1;
+			int y = 14;
+			for (int z = 0; z < 70 - target->getWidth() - hero->getWidth() - 10; z++) {
+				x++;;
+				gotoXY(x, y, "       ");
+				x --;
 				SetConsoleTextAttribute(hConsole, 10);
-				cout << arrow;
-				x -= 1;
+				gotoXY(x, y, arrow);
+				x --;
 				
-				Sleep(100);
+				Sleep(60);
 			}
 			SetConsoleTextAttribute(hConsole, 7);
 			break;
@@ -99,12 +95,11 @@ void animation(shared_ptr<Hero>& hero, shared_ptr<Hero>& target)
 		case lightningbolt: {
 			string lightning =  "/\\";
 
-			int x = 53;
-			int y = 13;
-			for (int z = 0; z < 15; z++) {
-				gotoXY(x, y);
+			int x = 70-hero->getWidth()-1;
+			int y = 14;
+			for (int z = 0; z < (70 - target->getWidth() - hero->getWidth() - 10)/2+4; z++) {
 				SetConsoleTextAttribute(hConsole, 14);
-				cout << lightning;
+				gotoXY(x, y, lightning);
 				x -= 2;
 				Sleep(50);
 			}
@@ -113,70 +108,117 @@ void animation(shared_ptr<Hero>& hero, shared_ptr<Hero>& target)
 		}
 
 		case shuriken: {
-			string vert[] = { "o   o",
+			vector<string> vert = { "o   o",
 							  "  o  ",
 							  "o   o" };
-			string hori[] = { "  o  ",
+			vector<string> hori = { "  o  ",
 				              "ooooo",
 				              "  o  " };
-			int x = 25;
+			int x = 70 - hero->getWidth() - vert[0].length() - 1;
 			int y = 12;
-			for (int z = 0; z < 20; z++) {
-				y = 4;
-				for (int b = 0; b < 3; b++) {
-					gotoXY(x, y);
-					cout << "     ";
+			for (int z = 0; z < 70 - target->getWidth() - hero->getWidth() - 10 + 3; z++) {
+				y = 12;
+				for (int b = 0; b < vert.size(); b++) {
+					gotoXY(x, y, "     ");
 					y++;
 				}
-				y = 4;
-				x++;
+				y = 12;
+				x--;
 				if (z%2 == 0) {
-					for (int i = 0; i < 3; i++)
+					for (int i = 0; i < vert.size(); i++)
 					{
 
-						for (int j = 0; j < 5; j++) {
+						for (int j = 0; j < vert[0].length(); j++) {
 							if (vert[i][j] == ' ') {
 								gotoXY(x, y);
 								SetConsoleTextAttribute(hConsole, 0);
 								cout << vert[i][j];
-								x++;
+								x--;
 							}
 							else {
 								gotoXY(x, y);
 								SetConsoleTextAttribute(hConsole, 13);
 								cout << vert[i][j];
-								x++;
+								x--;
 							}
 						}
 						y++;
-						x = 24 + z;
+						x = 70 - hero->getWidth() - vert[0].length() - 1 - z;
 					}
 				} else {
-					for (int i = 0; i < 3; i++)
+					for (int i = 0; i < hori.size(); i++)
 					{
 
-						for (int j = 0; j < 5; j++) {
+						for (int j = 0; j < hori[0].length(); j++) {
 							if (hori[i][j] == ' ') {
 								gotoXY(x, y);
 								SetConsoleTextAttribute(hConsole, 0);
 								cout << hori[i][j];
-								x++;
+								x--;
 							}
 							else {
 								gotoXY(x, y);
 								SetConsoleTextAttribute(hConsole, 13);
 								cout << hori[i][j];
-								x++;
+								x--;
 							}
 						}
 						y++;
-						x = 24 + z;
+						x = 70 - hero->getWidth() - vert[0].length() - 1 - z;
 					}
 				}
-				Sleep(75);
+				Sleep(65);
 			}
 			SetConsoleTextAttribute(hConsole, 7);
 			break;
+		}
+
+		case mortalstrike: {
+			int x = 10;
+			int y = 12;
+			for (int z = 0; z < 70 - target->getWidth() - hero->getWidth() - 10 + 5; z++) {
+
+				for (int b = 0; b < hero->getAscii().size(); b++) {
+					gotoXY(x, y, string(hero->getAscii()[b].length(),' '));
+					y++;
+				}
+				y = 12;
+				x++;
+				for (auto i: hero->getAscii())
+				{
+					gotoXY(x, y, i);
+					y++;
+				}
+				x = 10 + z;
+				y = 12;
+				
+				Sleep(40);
+			}
+			break; 
+		}
+
+		case bite: {
+			int x = 10;
+			int y = 12;
+			for (int z = 0; z < 70 - target->getWidth() - hero->getWidth() - 10 + 3; z++) {
+
+				for (int b = 0; b < hero->getAscii().size(); b++) {
+					gotoXY(x, y, string(hero->getAscii()[b].length(), ' '));
+					y++;
+				}
+				y = 12;
+				x++;
+				for (auto i : hero->getAscii())
+				{
+					gotoXY(x, y, i);
+					y++;
+				}
+				x = 10 + z;
+				y = 12;
+
+				Sleep(40);
+			}
+			break; 
 		}
 
 		default:

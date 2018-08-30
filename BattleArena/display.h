@@ -5,11 +5,8 @@
 #include <algorithm>
 #include <memory>
 #include <string>
-#include <fstream>
 #include <windows.h>
 #include "Hero.h"
-
-
 
 
 void startScreen();
@@ -25,5 +22,4 @@ void clearBox(bool left, bool right, bool up);
 void gotoXY(int x, int y, string text);
 void gotoXY(int x, int y);
 void grave(string name, string teamNumber, int x, int y);
-string getFileContents(std::ifstream& File,int x, int y);
 
