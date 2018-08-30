@@ -3,7 +3,7 @@
 // colorattribute = foreground + background * 16
 // to get red text on yellow use 4 + 14*16 = 228
 // light red on yellow would be 12 + 14*16 = 236
-// a Dev-C++ tested console application by  vegaseat  07nov2004
+
 
 #include "display.h"
 enum Abilities {fireball,aimshot,lightningbolt,shuriken,mortalstrike,bite};

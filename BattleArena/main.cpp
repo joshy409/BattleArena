@@ -1,7 +1,7 @@
 ﻿#include "display.h"
 //#undef max
 
-//TODO AI mode
+//TODO vs comp mode computer randomly selects
 /*bool play(vector<int>& index1, vector<int>& index2, vector<Hero>& team1, vector<Hero>& team2) {
 
 	if (team1[0].getTeamNumber() == "1") {
@@ -159,7 +159,9 @@ bool aiplay(shared_ptr<vector<int>>& index1, shared_ptr<vector<int>>& index2, ve
 }
 
 
-
+//TODO: add comments, implement menu screen to chosse pvp, vscomp and pve
+//TODO: balance teams
+//TODO: boss design 
 int main()
 {
 	vector<string> mage =
@@ -200,7 +202,6 @@ int main()
 		,"  |   | .  \\  "
 		," .'. ,\\_____'." };
 
-	//TODO: needs new art
 	vector<string> ninja =
 	{   "          ",
 	    "          ",
