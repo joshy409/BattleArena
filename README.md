@@ -1,4 +1,5 @@
 ## BattleArena Assessment
+Assesment for Introduction to C++
 
 ## General Description
 This is a game or simulation that consists of two teams of opposing forces.
@@ -19,11 +20,4 @@ The class stores a health variable, in addition to other information
 The game contains two arrays, each containing instances of the custom class. These arrays make up the opposing forces.
 During each turn, members of each force must ‘fight’. Upon completion of each turn the members of each force are sorted according to health.
 When all members of a force have been defeated, a game-over message is displayed.
-Suggested Implementation
-You are free to make any sort of game you wish, in any way you wish, provided the above requirements are met. The brief below outlines a program you could make to satisfy these requirements.
 
-Civil War:
-
-This game will be an automated simulation. I.e., no interaction from the user is required, except to press ‘enter’ to continue processing the simulation.
-
-Create a class object that stores the data for each hero:
