@@ -24,6 +24,7 @@ During each turn, members of each force must ‘fight’. Upon completion of eac
 
 When all members of a force have been defeated, a game-over message is displayed.
 
-![A screenshot of the included sample project](.github/BattleArena.png)
-![A screenshot of the included sample project](.github/BattleArena1.png)
-![A screenshot of the included sample project](.github/BattleArena2.png)
+## My Implementation
+![A screenshot of the included sample project](BattleArena/BattleArena.png)
+![A screenshot of the included sample project](BattleArena/BattleArena1.png)
+![A screenshot of the included sample project](BattleArena/BattleArena2.png)
