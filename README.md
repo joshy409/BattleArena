@@ -1,5 +1,6 @@
 ## BattleArena Assessment
-##General Description
+
+## General Description
 This is a game or simulation that consists of two teams of opposing forces.
 
 The forces must be implemented as Class objects stored within two separate arrays. The objects must contain health values.
@@ -12,7 +13,7 @@ The game or simulation continues its turns until all members within a force are 
 
 You may implement this game however you wish, either as two-player, one-player, or automated simulation, but it must make use of two arrays of custom Class objects that are sorted each turn.
 
-##Requirements
+## Requirements
 A custom class is used to instantiate members of each force
 The class stores a health variable, in addition to other information
 The game contains two arrays, each containing instances of the custom class. These arrays make up the opposing forces.
