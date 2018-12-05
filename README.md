@@ -1,5 +1,7 @@
-## Assesment for Introduction to C++
+## Battle Arena
 PVP Battle Arena on Windows Console
+
+Assesment for Introduction to C++
 
 ## General Description
 This is a game or simulation that consists of two teams of opposing forces.
